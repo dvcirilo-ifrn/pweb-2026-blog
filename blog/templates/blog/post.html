@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+{% block "title" %}{{ post.titulo }}{% endblock %}
+{% block "content" %}
+      <section class="py-5 text-center container">
+<h2>{{ post.titulo }}</h2>
+<h4>Postado em: {{ post.data }}</h4>
+{% if post.imagem %}
+<img src="{{ post.imagem.url }}" alt="" style="width: 500px;">
+{% endif %}
+<p>{{ post.texto | safe }}</p>
+      </section>
+{% endblock %}

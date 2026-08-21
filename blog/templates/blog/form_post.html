@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block "title" %}{% if is_editar %} Editar Post {% else %} Criar Post {% endif %}{% endblock %}
+{% block "content" %}
+<section class="py-5 container">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
+</section>
+{{ form.media }}
+{% endblock %}

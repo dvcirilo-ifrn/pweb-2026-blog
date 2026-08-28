@@ -1,19 +1,27 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Mensagem
+from .models import Post, Mensagem, Blog
 from .forms import MensagemForm, PostForm
+from django.contrib.auth.decorators import login_required, permission_required
+
 
 def index(request):
+
     context = {
         "posts": Post.objects.all(),
+        "titulo_blog": Blog.objects.first().titulo
     }
     return render(request, "blog/index.html", context)
 
+@login_required
+@permission_required("blog.view_post")
 def posts(request, id_post):
     context = {
         "post": get_object_or_404(Post, id=id_post),
     }
     return render(request, "blog/post.html", context)
 
+@login_required
+@permission_required("blog.add_post")
 def novo_post(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
@@ -28,6 +36,8 @@ def novo_post(request):
     }
     return render(request, "blog/form_post.html", context)
 
+@login_required
+@permission_required("blog.change_post")
 def editar_post(request, id_post):
     post = get_object_or_404(Post, id=id_post)
     if request.method == "POST":
@@ -44,6 +54,8 @@ def editar_post(request, id_post):
     }
     return render(request, "blog/form_post.html", context)
 
+@login_required
+@permission_required("blog.delete_post")
 def remover_post(request, id_post):
     if request.method == "POST":
         post = get_object_or_404(Post, id=id_post)
@@ -52,6 +64,7 @@ def remover_post(request, id_post):
     else:
         return render(request, "blog/confirmar_remocao.html")
 
+@login_required
 def contato(request):
     if request.method == "POST":
         form = MensagemForm(request.POST)

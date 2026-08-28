@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Meu Blog | {% block "title" %}{% endblock %}</title>
+    <title>{{ blog.titulo }} | {% block "title" %}{% endblock %}</title>
     <script src="{% static 'blog/color-modes.js' %}"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <meta name="theme-color" content="#712cf9" />
@@ -184,21 +184,19 @@
         <div class="container">
           <div class="row">
             <div class="col-sm-8 col-md-7 py-4">
-              <h4>About</h4>
-              <p class="text-body-secondary">
-                Add some information about the album below, the author, or any
-                other background context. Make it a few sentences long so folks
-                can pick up some informative tidbits. Then, link them off to
-                some social networking sites or contact information.
-              </p>
+              <h4>Sobre</h4>
+              <p class="text-body-secondary">{{ blog.sobre }}</p>
             </div>
             <div class="col-sm-4 offset-md-1 py-4">
-              <h4>Contact</h4>
+              <h4>Contato</h4>
               <ul class="list-unstyled">
-                <li><a href="#" class="text-white">Follow on X</a></li>
-                <li><a href="#" class="text-white">Like on Facebook</a></li>
-                <li><a href="#" class="text-white">Email me</a></li>
+                <li><a href="#" class="text-white">{{ blog.contatos|safe }}</a></li>
               </ul>
+              <a href="{% url 'login' %}" class="btn btn-secondary">ENTRAR!!</a>
+              <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-danger" value="SAIR!">
+              </form>
             </div>
           </div>
         </div>
@@ -224,7 +222,7 @@
               ></path>
               <circle cx="12" cy="13" r="4"></circle>
             </svg>
-            <strong>Meu Blog</strong>
+            <strong>{{ blog.titulo }}</strong>
           </a>
           <button
             class="navbar-toggler"
@@ -245,14 +243,12 @@
     </main>
     <footer class="text-body-secondary py-5">
       <div class="container">
-        <p class="float-end mb-1"><a href="#">Back to top</a></p>
+        <p class="float-end mb-1"><a href="#">Voltar ao início</a></p>
         <p class="mb-1">
-          Album example is &copy; Bootstrap, but please download and customize
-          it for yourself!
+          &copy; {{ blog.titulo }}
         </p>
         <p class="mb-0">
-          New to Bootstrap? <a href="/">Visit the homepage</a> or read our
-          <a href="../getting-started/introduction">getting started guide</a>.
+          {{ blog.subtitulo }}
         </p>
       </div>
     </footer>

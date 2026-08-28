@@ -1,6 +1,15 @@
 from django.db import models
 from tinymce.models import HTMLField
 
+class Blog(models.Model):
+    titulo = models.CharField(max_length=300)
+    subtitulo = models.CharField(max_length=300)
+    sobre = models.TextField()
+    contatos = HTMLField()
+
+    def __str__(self):
+        return self.titulo
+
 class Post(models.Model):
     titulo = models.CharField(max_length=100)
     imagem = models.ImageField(upload_to="posts")

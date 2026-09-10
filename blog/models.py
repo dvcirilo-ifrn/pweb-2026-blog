@@ -1,5 +1,10 @@
 from django.db import models
 from tinymce.models import HTMLField
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    pass
+
 
 class Blog(models.Model):
     titulo = models.CharField(max_length=300)
@@ -14,7 +19,7 @@ class Post(models.Model):
     titulo = models.CharField(max_length=100)
     imagem = models.ImageField(upload_to="posts")
     data = models.DateField(auto_now=True)
-    autor = models.CharField(max_length=100)
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
     texto = HTMLField()
 
     def __str__(self):

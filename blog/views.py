@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from .models import Post, Mensagem, Blog
-from .forms import MensagemForm, PostForm
+from .forms import MensagemForm, PostForm, UserCreationForm
 from django.contrib.auth.decorators import login_required, permission_required
-
 
 def index(request):
 
@@ -11,6 +11,20 @@ def index(request):
         "titulo_blog": Blog.objects.first().titulo
     }
     return render(request, "blog/index.html", context)
+
+def cadastro(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+    else:
+        form = UserCreationForm()
+
+    context = {
+        "form": form,
+    }
+    return render(request, "registration/cadastro.html", context)
 
 @login_required
 @permission_required("blog.view_post")
@@ -27,6 +41,7 @@ def novo_post(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Postagem criada com sucesso!')
             return redirect("index")
     else:
         form = PostForm()
@@ -44,6 +59,7 @@ def editar_post(request, id_post):
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Postagem editada com sucesso!')
             return redirect("index")
     else:
         form = PostForm(instance=post)
@@ -60,6 +76,7 @@ def remover_post(request, id_post):
     if request.method == "POST":
         post = get_object_or_404(Post, id=id_post)
         post.delete()
+        messages.success(request, 'Postagem removida com sucesso!')
         return redirect("index")
     else:
         return render(request, "blog/confirmar_remocao.html")

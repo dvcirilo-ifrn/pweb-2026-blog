@@ -192,11 +192,16 @@
               <ul class="list-unstyled">
                 <li><a href="#" class="text-white">{{ blog.contatos|safe }}</a></li>
               </ul>
-              <a href="{% url 'login' %}" class="btn btn-secondary">ENTRAR!!</a>
+              {% if user.is_authenticated %}
+              <p>Olá {{ user }}</p>
               <form method="POST" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <input type="submit" class="btn btn-danger" value="SAIR!">
               </form>
+              {% else %}
+              <a href="{% url 'login' %}" class="btn btn-secondary">ENTRAR!!</a>
+              <a href="{% url 'cadastro' %}" class="btn btn-secondary">Cadastre-se</a>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -239,6 +244,16 @@
       </div>
     </header>
     <main>
+      {% if messages %}
+      <div>
+          {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+              </div>
+          {% endfor %}
+      </div>
+      {% endif %}
       {% block "content" %}{% endblock "content" %}
     </main>
     <footer class="text-body-secondary py-5">

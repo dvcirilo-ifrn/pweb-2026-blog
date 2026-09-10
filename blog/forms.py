@@ -1,7 +1,15 @@
 from django import forms
-from .models import Mensagem, Post
+from .models import Mensagem, Post, User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
+from django.contrib.auth.forms import UserCreationForm as DjangoUserCreationForm
+from django.contrib.auth.forms import UsernameField
+
+class UserCreationForm(DjangoUserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username",)
+        field_classes = {"username": UsernameField}
 
 class MensagemForm(forms.ModelForm):
     class Meta:

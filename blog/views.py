@@ -2,12 +2,21 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Post, Mensagem, Blog
 from .forms import MensagemForm, PostForm, UserCreationForm
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, permission_required
 
 def index(request):
+    posts = Post.objects.all()
+    paginator = Paginator(posts, 6)  # Separa em páginas de 6 posts
+    numero_da_pagina = request.GET.get('pagina')  # Pega o número da página da URL
+    print(numero_da_pagina)
+    numero_da_pagina = numero_da_pagina if numero_da_pagina else 1
+    posts_paginados = paginator.get_page(numero_da_pagina)
+    range_elided = paginator.get_elided_page_range(numero_da_pagina, on_each_side=1, on_ends=1)
 
     context = {
-        "posts": Post.objects.all(),
+        "posts": posts_paginados,
+        "range_elided": range_elided,
         "titulo_blog": Blog.objects.first().titulo
     }
     return render(request, "blog/index.html", context)
